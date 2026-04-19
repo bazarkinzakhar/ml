@@ -1,0 +1,11 @@
+name: build-test
+on: [push]
+jobs:
+  check-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+
+      - name: try build docker image
+        run: docker build . -t cnn-app:latest
