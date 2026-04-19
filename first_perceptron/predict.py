@@ -21,6 +21,17 @@ def run_gui():
     import tkinter as tk
     from scipy.ndimage import label, find_objects
 
+    root = tk.Tk()
+    root.title("digit recognizer")
+    
+    global image, draw, label_res
+    
+    canvas = tk.Canvas(root, width=600, height=200, bg='black')
+    canvas.pack()
+    
+    image = Image.new("L", (600, 200), 0)
+    draw = ImageDraw.Draw(image)
+
     def check():
         arr = np.array(image)
         labeled, n = label(arr > 0)
@@ -40,30 +51,26 @@ def run_gui():
             full_number += str(predict(img_final))
         label_res.config(text=f"number: {full_number}")
 
-    root = tk.Tk()
-    root.title("digit recognizer")
-    canvas = tk.Canvas(root, width=600, height=200, bg='black')
-    canvas.pack()
-    
-    global image, draw
-    image = Image.new("L", (600, 200), 0)
-    draw = ImageDraw.Draw(image)
-
     def paint(event):
         x, y = event.x, event.y
         canvas.create_oval(x-8, y-8, x+8, y+8, fill="white", outline="white")
         draw.ellipse([x-8, y-8, x+8, y+8], fill=255)
 
+
     canvas.bind("<B1-Motion>", paint)
+    
     tk.Button(root, text="predict", command=check).pack()
     tk.Button(root, text="clear", command=lambda: (canvas.delete("all"), draw.rectangle([0,0,600,200], fill=0))).pack()
-    global label_res
+    
+
     label_res = tk.Label(root, text="draw here", font=("Arial", 20))
     label_res.pack()
+    
     root.mainloop()
 
 if __name__ == "__main__":
-    if os.environ.get('DISPLAY') or os.name == 'nt':
+    try:
         run_gui()
-    else:
-        print("headless mode: model loaded, check passed")
+    except Exception as e:
+        print(f"could not start gui: {e}")
+        print("running headless mode as fallback")
