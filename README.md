@@ -1,17 +1,6 @@
-Сделанное мною в конце первого курса распознавание рукописных чисел на pytorch
+# ML Digit Recognition Service
+Professional CNN implementation for MNIST.
 
-технологии: python, pytorch, torchvision, pillow, tkinter
-также поддержка ускорения mps (apple silicon) или cpu
-
-параметры модели:
-- архитектура: cnn (2 сверточных слоя, 2 полносвязных)
-- функция потерь: crossentropyloss
-
-обучение:
-- датасет: mnist
-- эпохи: 5
-- батч: 64
-
-файлы:
-- main.py: обучение и сохранение модели в cnn_mnist.pth
-- predict.py: рисование в окне и распознавание чисел
+- Python 3.10 / PyTorch
+- Docker (Multi-stage)
+- GitHub Actions (CI)

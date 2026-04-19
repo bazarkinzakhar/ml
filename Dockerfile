@@ -1,19 +1,15 @@
-FROM python:3.10-slim
-
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
-
+FROM python:3.10-slim as builder
 WORKDIR /app
-
-RUN apt-get update && apt-get install -y \
-    python3-tk \
-    libgl1 \
-    libglib2.0-0 \
-    && rm -rf /var/lib/apt/lists/*
-
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --user --no-cache-dir -r requirements.txt
 
+FROM python:3.10-slim
+WORKDIR /app
+COPY --from=builder /root/.local /root/.local
 COPY . .
 
-CMD ["python", "predict.py"]
+ENV PATH=/root/.local/bin:$PATH
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+CMD ["python", "first_perceptron/predict.py"]
